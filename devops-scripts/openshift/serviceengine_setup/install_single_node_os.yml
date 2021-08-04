@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  vars:
+    openshift_host: "{{hostname}}"
+    build: test
+  tasks:
+    - name: Check if
+
+
+    - file: path=roles state=directory mode=0755
+    - shell: ansible-galaxy install -p roles -r ansible_requirements.yml -cf
+    - name: Create the VMware virtual machine.
+      vsphere_guest:
+        vcenter_hostname: "{{ vcenter_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        guest: "{{ guest_name }}"
+        from_template: yes
+        template_src: "{{ template }}"
+        validate_certs: false
+        cluster: Arista
+        resource_pool: /Resources
+    - name: Get information from the virtual machine.
+      vsphere_guest:
+        vcenter_hostname: "{{ vcenter_hostname }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        guest: "{{ guest_name }}"
+        validate_certs: false
+        vmware_guest_facts: yes
+      register: host
+    - debug: var=host
+    - add_host: name="{{ host.ansible_facts.hw_eth0.ipaddresses[0] }}" groups=hosts ansible_user=root
+
+- hosts: hosts
+  tasks:
+    - yum: name='*' state=latest
+    - sysctl: name="net.ipv4.ip_forward" value=1 sysctl_set=yes state=present reload=yes
+    - service: name="firewalld" state="stopped" enabled="no"
+
+- hosts: hosts
+  roles:
+    - role: avinetworks.docker
+    - role: avinetworks.avicontroller

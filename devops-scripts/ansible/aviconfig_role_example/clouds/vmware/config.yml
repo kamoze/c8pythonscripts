@@ -1,0 +1,62 @@
+avi_config:
+  avi_cloud_discovery_wait: 450
+  cloud:
+    - name: Default-Cloud
+      vtype: CLOUD_VCENTER
+      dhcp_enabled: true
+      license_type: "LIC_CORES"
+      vcenter_configuration:
+        username: "username"
+        password: "password"
+        datacenter: "wdc-02-vc20"
+        management_network: "/api/vimgrnwruntime?name=vxw-dvs-34-virtualwire-3-sid-2200002-wdc-02-vc20-avi-mgmt"
+        privilege: "WRITE_ACCESS"
+        vcenter_url: "10.10.2.10"
+
+  serviceenginegroup:
+    - name: Default-Group
+      cloud_ref: '/api/cloud?name=Default-Cloud'
+      vcenter_folder: Gaurav/grse
+      vcenter_clusters:
+        cluster_refs:
+          - '/api/vimgrclusterruntime?name=wdc-02-vc20c01'
+        include: True
+      max_se: 4
+      buffer_se: 1
+      se_name_prefix: grastogi
+
+
+  systemconfiguration:
+    - email_configuration:
+        smtp_type: SMTP_LOCAL_HOST
+        from_email: admin@avicontroller.net
+      global_tenant_config:
+        se_in_provider_context: true
+        tenant_access_to_provider_se: true
+        tenant_vrf: false
+      ntp_servers:
+        - server:
+            type: DNS
+            addr: 0.us.pool.ntp.org
+        - server:
+            type: DNS
+            addr: 1.us.pool.ntp.org
+        - server:
+            type: DNS
+            addr: 2.us.pool.ntp.org
+        - server:
+            type: DNS
+            addr: 3.us.pool.ntp.org
+      portal_configuration:
+        allow_basic_authentication: true
+        disable_remote_cli_shell: false
+        enable_clickjacking_protection: true
+        enable_http: true
+        enable_https: true
+        password_strength_check: false
+        redirect_to_https: true
+        sslkeyandcertificate_refs:
+          - "/api/sslkeyandcertificate?name=System-Default-Portal-Cert"
+          - "/api/sslkeyandcertificate?name=System-Default-Portal-Cert-EC256"
+        sslprofile_ref: "/api/sslprofile?name=System-Standard-Portal"
+        use_uuid_from_input: false

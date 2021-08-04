@@ -1,0 +1,74 @@
+- hosts: localhost
+  connection: local
+  roles:
+    - { role: avinetworks.avicontroller_vmware }
+    - { role: avinetworks.avisdk }
+  vars_files:
+    - vars.yml
+  vars:
+    controller_creds:
+      - mgmt_ip: "{{ controller_cluster_1 }}"
+        vm_name: "{{ controller_name_1 }}"
+      - mgmt_ip: "{{ controller_cluster_2 }}"
+        vm_name: "{{ controller_name_2 }}"
+      - mgmt_ip: "{{ controller_cluster_3 }}"
+        vm_name: "{{ controller_name_3 }}"
+
+  # deploy controller vcenter
+  tasks:
+    - name: Deploy Avi Controller
+      with_items: "{{ controller_creds }}"
+      deploy_controller:
+        ovftool_path: /usr/bin/
+        vcenter_host: "{{ vcenter_host }}"
+        vcenter_user: "{{ vcenter_user }}"
+        vcenter_password: "{{ vcenter_pwd }}"
+        con_datacenter: "{{ datacenter }}"
+        con_cluster: "{{ vmware_cluster_name }}"
+        con_ova_path: "{{ ova_path }}"
+        con_vm_name: "{{ item.vm_name }}"
+        con_vcenter_folder: "{{ folder }}"
+        con_datastore: "{{ vmware_datastore }}"
+        con_mgmt_network: "{{ mgmt_network }}"
+        con_power_on: "{{ power_on }}"
+        con_mgmt_ip: "{{ item.mgmt_ip }}"
+        con_mgmt_mask: "{{ mgmt_subnet_mask }}"
+        con_default_gw: "{{ mgmt_dgw }}"
+
+    # initial controller configuration
+    - name: Wait for Controller be ready
+      uri:
+        validate_certs: False
+        url: "http://{{ item.mgmt_ip }}/"
+        method: GET
+        status_code: 200,302,301,503
+      register: statusCode_output
+      until: statusCode_output.status == 200
+      retries: 120
+      delay: 60
+      with_items: "{{ controller_creds }}"
+
+    - name: Check Cluster Status
+      uri:
+        validate_certs: false
+        url: "https://{{ item.mgmt_ip }}/api/cluster/runtime"
+        method: GET
+        status_code: 200,302,301,503
+      register: cluster_status
+      until: cluster_status.json.cluster_state.progress == 100
+      retries: 120
+      delay: 60
+      with_items: "{{ controller_creds }}"
+
+    - name: Wait to all services be ready
+      pause:
+        echo: no
+        seconds: 60
+
+    - name: Change admin default password
+      avi_useraccount:
+        controller: "{{ controller_creds[0].mgmt_ip }}"
+        username: "{{ avi_credentials.username }}"
+        password: "{{ avi_credentials.password }}"
+        api_version: "{{ avi_credentials.api_version }}"
+        old_password: "{{ old_password }}"

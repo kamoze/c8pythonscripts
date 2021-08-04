@@ -1,0 +1,26 @@
+# These settings are for demo purpose only. Pl. modify it as per target
+# environment
+
+avi_credentials:
+  controller: 10.10.25.29
+  username: admin
+  password: "{{ avi_password }}"
+  api_version: 18.2.2
+
+#vcenter configuration
+vcenter_username: "aviuser1"
+datacenter: "wdc-02-vc20"
+network: "vxw-dvs-34-virtualwire-3-sid-2200002-wdc-02-vc20-avi-mgmt"
+vcenter_host: "10.79.22.40"
+vcenter_password: password
+
+state: "present"
+
+# all apps use the same backend servers
+app1_vip: 10.90.64.200
+app2_vip: 10.90.64.201
+
+pool_server1: 10.90.64.16
+pool_server2: 10.90.64.14
+pool_server3: 10.90.64.15
+pool_server4: 10.90.64.13
