@@ -6,15 +6,6 @@ r2 = 10
 print (r1 + ' is' + ' ' + str(r2) + ' years old')
 
 
-
-
-
-
-
-
-
-
-
 count = 10 
 count1 = '10'
 count2 = True
