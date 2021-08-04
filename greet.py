@@ -7,4 +7,7 @@ def greet(name):
     print("Hello, " + name + ". Good morning!")
 
 
-greet('Ini')
+greet('Blue')
+
+
+greet('Mo Abudu')
