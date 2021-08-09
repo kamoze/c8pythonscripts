@@ -1,0 +1,50 @@
+# This is playbook for an application.
+# This can invoke any of the avi roles like application, profile or cloud
+#
+---
+- hosts: localhost
+  connection: local
+  vars:
+    app_name: complex_app
+  roles:
+    - role: avinetworks.avisdk
+  tasks:
+    - name: Setting up Application
+      debug: msg="{{ app_name }}"
+
+    - name: Load vars
+      include_vars:
+        file: "{{ site_dir }}/vars/{{deployment_target | default('staging')}}/creds.yml"
+
+    - name: Compose Avi Config
+      set_fact:
+        avi_config_var:
+          pool:
+            - name: "{{ app_name}}-pool"
+              lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
+              servers:
+                - ip:
+                     addr: "{{ pool_server1 }}"
+                     type: 'V4'
+                - ip:
+                     addr: "{{ pool_server2 }}"
+                     type: 'V4'
+          vsvip:
+            - name: "{{app_name}}-vsvip"
+              vip:
+                - ip_address:
+                    addr: "{{ complex_app_vip }}"
+                    type: 'V4'
+                  vip_id: '1'
+          virtualservice:
+            - name: "{{app_name}}"
+              services:
+                - port: 80
+              pool_ref: "/api/pool?name={{app_name}}-pool"
+              vsvip_ref: "/api/vsvip/?name={{app_name}}-vsvip"
+
+    - name: Avi Application | Setup complex_app
+      import_role:
+        name: avinetworks.aviconfig
+      vars:
+        avi_config: "{{avi_config_var}}"

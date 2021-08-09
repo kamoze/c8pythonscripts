@@ -1,0 +1,35 @@
+#
+# @author: Gaurav Rastogi grastogi@avinetworks.com
+# Simple playbook to create virtualservice and get on it using
+# avi_api_session module
+# ansible-playbook -M <location of avi ansible modules> vs.yml
+---
+- hosts: localhost
+  vars:
+    avi_credentials:
+      controller: 10.10.25.42
+      username: admin
+      password: "{{ avi_password }}"
+    # state: absent
+    tenant: admin
+  connection: local
+  roles:
+    - role: avinetworks.avisdk
+  tasks:
+      #fidelity-xfwd-http
+    - name: 'Create or Update applicationprofile: xfwd-http'
+      avi_applicationprofile:
+        avi_credentials: "{{ avi_credentials }}"
+        api_context: "{{ api_context | default(omit) }}"
+        api_version: 17.2.6
+        http_profile:
+          connection_multiplexing_enabled: true
+          secure_cookie_enabled: false
+          x_forwarded_proto_enabled: true
+          xff_alternate_name: null
+          xff_enabled: true
+        name: xfwd-http
+        state: "{{ state | default(omit) }}"
+        tenant: admin
+        tenant_ref: /api/tenant/?name=admin
+        type: APPLICATION_PROFILE_TYPE_HTTP

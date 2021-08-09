@@ -1,0 +1,10 @@
+avi_cloud_discovery_wait: 180
+
+avi_config:
+  cloud:
+    - name: noaccess
+      vtype: CLOUD_NONE
+      dhcp_enabled: true
+      license_type: "LIC_CORES"
+
+

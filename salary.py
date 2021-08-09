@@ -9,9 +9,11 @@ def staff(name):
         bonus = 300
     elif name == 'Jay':
         bonus = 400
+    elif name == 'Blue':
+        bonus = 500
     else:
         bonus = salary * 0.1
     print(bonus)
 
 
-staff('Jay')
+staff('Blue')

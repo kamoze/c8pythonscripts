@@ -1,0 +1,51 @@
+#
+# @author: Gaurav Rastogi grastogi@avinetworks.com
+# Simple playbook to create virtualservice and get on it using
+# avi_api_session module
+# ansible-playbook -M <location of avi ansible modules> vs.yml
+---
+- hosts: localhost
+  connection: local
+  vars:
+    avi_credentials:
+      controller: 10.10.25.42
+      username: admin
+      password: password
+  tasks:
+    - name: create pool pgm1
+      avi_pool:
+        avi_credentials: "{{ avi_credentials }}"
+        name: pgm1
+        description: pool group member 1
+        state: present
+        health_monitor_refs:
+           - '/api/healthmonitor?name=System-HTTP'
+        servers:
+           - ip:
+               addr: '10.90.64.111'
+               type: 'V4'
+    - name: create pool pgm2
+      avi_pool:
+        avi_credentials: "{{ avi_credentials }}"
+        name: pgm2
+        description: pool group member 1
+        state: present
+        health_monitor_refs:
+           - '/api/healthmonitor?name=System-HTTP'
+        servers:
+           - ip:
+               addr: '10.90.64.112'
+               type: 'V4'
+    - name: create pool group pg1
+      avi_poolgroup:
+        avi_credentials: "{{ avi_credentials }}"
+        name: pg1
+        description: pool group member 1
+        state: present
+        members:
+          - ratio: '100'
+            pool_ref: /api/pool?name=pgm1
+            priority_label: 1000
+          - ratio: 2
+            pool_ref: /api/pool?name=pgm2
+            priority_label: 1000
