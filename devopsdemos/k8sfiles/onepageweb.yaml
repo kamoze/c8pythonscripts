@@ -41,7 +41,7 @@ spec:
         tier: frontend
     spec:
       containers:
-        - image: redoosolutions/apps:onepage:latest
+        - image: redoosolutions/pythonscripts:latest
           name: onepage
           imagePullPolicy: Always
           #command: [ "echo", "SUCCESS" ]
@@ -54,6 +54,8 @@ spec:
           volumeMounts:
           - name: onepage
             mountPath: /usr/local/apache2/htdocs
+          imagePullSecrets:
+          - name: myregistrykey
       volumes:
       - name: onepage
         persistentVolumeClaim:

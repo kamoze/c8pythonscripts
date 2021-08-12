@@ -8,7 +8,7 @@
  /_____/|_|_|\__,_|\___/___/  \____//_____/
 
 
-This file contains scripts required for the proper functionality and display
+This cator8 file contains scripts required for the proper functionality and display
 of your Slides Project. It also requires plugins.js and jquery-3.3.1 to run this script properly.
 
 https://designmodo.com/slides/
