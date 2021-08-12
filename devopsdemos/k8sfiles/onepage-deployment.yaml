@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onepage
+  namespace: rcloud
+  labels:
+    app: onepage
+spec:
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: onepage
+  template:
+    metadata:
+      labels:
+        app: onepage
+        tier: frontend
+    spec:
+      containers:
+        - image: redoosolutions/pythonscripts:latest
+          name: onepage
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            runAsUser: 0
+          ports:
+            - containerPort: 80
+              name: onepage
+          imagePullSecrets:
+            - name: myregistrykey
