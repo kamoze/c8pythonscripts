@@ -27,5 +27,5 @@ spec:
           ports:
             - containerPort: 80
               name: onepage
-          imagePullSecrets:
-            - name: regcred
+     imagePullSecrets:
+       - name: regcred
