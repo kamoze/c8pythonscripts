@@ -28,4 +28,4 @@ spec:
             - containerPort: 80
               name: onepage
           imagePullSecrets:
-            - name: myregistrykey
+            - name: regcred
