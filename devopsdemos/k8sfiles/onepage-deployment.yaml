@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: onepage
-  namespace: rcloud
+  namespace: onepage
   labels:
     app: onepage
 spec:
