@@ -1,3 +1,5 @@
+
+# test commit for auto merge
 # Initialize counter
 counter = 1
 # Iterate the loop 5 times
