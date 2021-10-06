@@ -1,0 +1,35 @@
+avi_config:
+  pool:
+    - name: app4-pool
+      lb_algorithm: LB_ALGORITHM_ROUND_ROBIN
+      servers:
+        - ip:
+             addr: "{{pool_server1}}"
+             type: 'V4'
+  vsvip:
+    - name: vsvip-app4-Default-Cloud
+      tenant: admin
+      tenant_ref: /api/tenant/?name=admin
+      vip:
+      - enabled: true
+        ip_address:
+          addr: "{{ app4_vip }}"
+          type: V4
+        vip_id: '1'
+
+  virtualservice:
+    - name: app4
+      services:
+        - port: 80
+      pool_ref: '/api/pool?name=app4-pool'
+      vsvip_ref: /api/vsvip/?name=vsvip-app4-Default-Cloud
+
+  vsdatascriptset:
+    - name: app-4-ds
+      datascript:
+        - evt: VS_DATASCRIPT_EVT_HTTP_REQ
+          script: "avi.vs.log(\"req\")"
+        - evt: VS_DATASCRIPT_EVT_HTTP_RESP
+          script: "avi.vs.log(\"resp\")"
+      pool_refs:
+        - '/api/pool?name=app4-pool'

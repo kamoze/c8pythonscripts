@@ -1,0 +1,66 @@
+#
+# @author: Gaurav Rastogi grastogi@avinetworks.com
+# Simple playbook to create virtualservice and get on it using
+# avi_api_session module
+# ansible-playbook -M <location of avi ansible modules> vs.yml
+---
+- hosts: localhost
+  vars:
+    state: absent
+    controller: 10.10.25.42
+    username: admin
+    password: password
+    tenant: Metrics_Test_Tenant
+  connection: local
+  roles:
+    - role: avinetworks.avisdk
+  tasks:
+    - avi_pool:
+        controller: "{{ controller }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        #state: absent
+        tenant: "{{ tenant }}"
+        api_version: 17.1.1
+        name: testpool
+        health_monitor_refs:
+           - '/api/healthmonitor?name=System-HTTP'
+        servers:
+           - ip:
+               addr: '10.90.64.16'
+               type: 'V4'
+      register: mypool
+    - avi_vsvip:
+        name: vsvip-testvs-Default-Cloud
+        avi_credentials: '{{ avi_credentials }}' 
+        api_context: '{{avi_api_context | default(omit)}}'
+        tenant_ref: /api/tenant/?name={{ tenant }}
+        cloud_ref: /api/cloud/?name=Default-Cloud
+        state: "{{ state }}"
+        vip:
+        - vip_id: '1'
+          avi_allocated_fip: false
+          auto_allocate_ip: false
+          enabled: true
+          auto_allocate_floating_ip: false
+          avi_allocated_vip: false
+          auto_allocate_ip_type: V4_ONLY
+          ip_address:
+            type: V4
+            addr: 198.51.100.252
+    - avi_virtualservice:
+        controller: "{{ controller }}"
+        username: "{{ username }}"
+        password: "{{ password }}"
+        tenant: "{{ tenant }}"
+        tenant_ref: '/api/tenant?name={{ tenant }}'
+        name: testvs
+        state: "{{ state }}"
+        services:
+           - port: 80
+        pool_ref: '/api/pool?name=testpool'
+        performance_limits:
+           max_concurrent_connections: 1000
+        api_version: 17.1.1
+        vsvip_ref: /api/vsvip/?name=vsvip-testvs-Default-Cloud
+      register: testvs

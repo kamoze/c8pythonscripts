@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: onepage-ingress
+spec:
+  rules:
+  - host: onepage.spantreeng.com
+    http:
+      paths:
+      - backend:
+          serviceName: onepage
+          servicePort: 80

@@ -1,0 +1,53 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    avi_credentials:
+      controller: 10.10.25.42
+      username: admin
+      password: password$%
+  tasks:
+    - name: create http monitor
+      avi_healthmonitor:
+        avi_credentials: "{{ avi_credentials }}"
+        http_monitor:
+          http_request: HEAD / HTTP/1.0
+          http_response_code:
+            - HTTP_2XX
+            - HTTP_3XX
+        receive_timeout: 4
+        failed_checks: 3
+        send_interval: 10
+        successful_checks: 3
+        type: HEALTH_MONITOR_HTTP
+        name: MyWebsite-HTTP
+      register: hm_obj
+    - debug:
+        msg: "{{ hm_obj }}"
+    - name: get pool information
+      avi_pool:
+        avi_credentials: "{{ avi_credentials }}"
+        name: p1
+    - name: Associate the Monitor to the Application
+      avi_api_session:
+        avi_credentials: "{{ avi_credentials }}"
+        tenant:     "admin"
+        http_method: get
+        path: pool
+        params:
+          name: p1
+      register: pool_results
+    - name: Get Pool Path Info
+      set_fact:
+        pool_path: pool/{{ pool_results.obj.results[0].uuid }}
+
+    - name: Update API Session
+      avi_api_session:
+        avi_credentials: "{{ avi_credentials }}"
+        tenant:      "admin"
+        http_method: patch
+        path:        "{{ pool_path }}"
+        data:
+          add:
+            health_monitor_refs:
+              - "{{ hm_obj.obj.uuid }}"
