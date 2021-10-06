@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: onepage-ingress
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: "nginx"
 spec:
   rules:
   - host: onepage.spantreeng.com

@@ -11,4 +11,4 @@ spec:
   selector:
     app: onepage
     tier: frontend
-  type: NodePort
+  type: ClusterIP
