@@ -1,0 +1,17 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: onecred
+  namespace: onepage
+spec:
+  encryptedData:
+    .dockerconfigjson: AgCYYo1y2MA5f5IOImgIx90rCFyYNgBVmR7WGr1Sex8NLBiicmEe5s2y3CSeXen/heSC7uULDDhF+vrsfpa80rfGn/XxO9ZA6y+g8ZWnUWlXF9NJ/j8Ky3+4uWK+mSvD0Ah80JdBHMCQy7qF0bhD8gAM/Us6De2TBkhfJhhOJNklkdYQbKs4kOWv4uUqojFtDsVhWBxi1SCR5op4EH1+0iGJYxLN4NxUQ+xr4kMfp5gHXcfbTLi5m9HEI3HQTgxLSGfU+L5nUDTEvfngteYC+4wgYv72WiYEYZmqW23MYiU2n936f9WIKn7baCvaF46qJHHot2iYGfElFgsFrU+SOyqXe/gxNr+5uqE3YhknUJkCYcrb77nSFufGMtRLLgxdvjdbD8s+iJP9d7N6MYPsGnhinBOaBOGb/Osov06Zv+VSg088By54lxy0/oPkLp/IAX3UqxFbzPqSkCUFaORQhHyHbATUy2hoOCvqKhpzpViLbHxYPlywj2gxFtpzRya9+b+zppDygrj6eO2bo3a4PJIcv3mzZ1DSGjMjEn4eI3nnO79xv3d6PY4qRomhUh/LBfxl6BzBeiYqmiZ6mB7cRdAGUHrfLB18+HQLAewhY3cJxEYn1sy7pWo+NWlyBvybFxGSvfOp9SUV4Itll+bosVyt2Gfl2Tnc54h64K2RfVdrVmRxkz66J0WuHIvOiwTdFzE1TQr5mpv+FTmXRjgDyx3ogVTC0pdrzg5aX7ZlcSd8cBVpweKMzJ9BiN1vcP8BB21LRIs4XrYLgRtriY9wG2p6JjcqfeGgqImZ3CarVbEKhrAEbMbEei+e3WVw5fBpQL4FziYeL21sNmllICqsxcxmxBmUlxI1eR7xOWh55E1+ORLTqvcEk+Rreu7R4Vi8xUMKbVVoDNWpcZgxsAlavmoxH2+aS3++yLNbgTTkWD5NHa+K
+  template:
+    data: null
+    metadata:
+      creationTimestamp: null
+      name: onecred
+      namespace: onepage
+    type: kubernetes.io/dockerconfigjson
+
