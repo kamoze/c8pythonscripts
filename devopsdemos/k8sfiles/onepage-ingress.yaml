@@ -1,3 +1,4 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -20,3 +21,11 @@ spec:
             port: 
               number: 80
   ingressClassName: nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: nginx
+  namespace: onepage
+spec:
+  controller: nginx.org/ingress-controller
