@@ -4,7 +4,7 @@ metadata:
   name: onepage
   namespace: onepage
   labels:
-    app: onapage
+    app: onepage
 spec:
   ports:
     - port: 80
